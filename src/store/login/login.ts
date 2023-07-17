@@ -4,6 +4,8 @@ import type { IAccount } from '@/types'
 import { localCache } from '@/utils/cache'
 import router from '@/router/main'
 import { LOGIN_TOKEN } from '@/global/constants'
+import type {RouteRecordRaw} from "vue-router";
+import {mapMenusToRoutes} from "@/utils/map-menus";
 
 interface ILoginState {
   token: string
@@ -31,6 +33,23 @@ const useLoginStore = defineStore('login', {
       const userMenusResult = await getUserMenusByRoleId(this.userInfo.role.id)
       this.userMenus = userMenusResult.data
       localCache.setCache('userMenus', userMenusResult.data)
+      // 动态读取路由
+      // const localRoutes: RouteRecordRaw[] = []
+      // // 读取路由文件 eager为true立即获取结果
+      // const files:Record<string, any> = import.meta.glob('../../router/main/**/*.ts', {eager: true})
+      // for (const key in files){
+      //   const modules = files[key]
+      //   localRoutes.push(modules.default)
+      // }
+      // for (const menu of this.userMenus) {
+      //   for (const submenu of menu.children) {
+      //     const route = localRoutes.find((item)=> item.path === submenu.url)
+      //     if (route) router.addRoute('main', route)
+      //   }
+      // }
+      const routes = mapMenusToRoutes(this.userMenus)
+      routes.forEach(route=>router.addRoute('main', route))
+
       await router.push('/main')
     }
   }

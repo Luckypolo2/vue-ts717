@@ -1,6 +1,7 @@
 <script  lang="ts" setup="">
 import {Monitor, Setting, ShoppingBag} from "@element-plus/icons-vue";
 import useLoginStore from "@/store/login/login";
+import {useRouter} from "vue-router";
 const loginStore = useLoginStore()
 const userMenu = loginStore.userMenus
 
@@ -10,6 +11,11 @@ defineProps({
     default: false
   }
 })
+const router = useRouter()
+function handleItemClick(item) {
+  const url = item.url
+  router.push(url)
+}
 
 </script>
 
@@ -31,7 +37,7 @@ defineProps({
               <span>{{item.name}}</span>
             </template>
             <template v-for="subItem in item.children" :key="subItem.id">
-              <el-menu-item :index="String(subItem.id)">{{subItem.name}}</el-menu-item>
+              <el-menu-item @click="handleItemClick(subItem)" :index="String(subItem.id)">{{subItem.name}}</el-menu-item>
             </template>
           </el-sub-menu>
         </template>

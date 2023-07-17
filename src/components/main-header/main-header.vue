@@ -20,7 +20,7 @@ function handleMenuIconClick(){
     </div>
     <div class="content">
       <div class="breadcrumb">面包屑</div>
-      <div class="info">个人信息</div>
+      <header-info></header-info>
     </div>
   </div>
 </template>
